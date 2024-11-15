@@ -1,4 +1,5 @@
 import { Head, Link } from "@inertiajs/react";
+import Navbar from "@/Components/Navbar";
 
 export default function Welcome({ auth, laravelVersion, phpVersion }) {
     // const handleImageError = () => {
@@ -14,9 +15,11 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
 
     return (
         <>
-            <Head title="Welcome" />
+            <Head>
+                <title>Snapix Homepage</title>
+            </Head>
             <div className="w-full h-screen">
-                <h1 className="text-9xl">Tessss</h1>
+                <Navbar auth={auth} />
             </div>
         </>
     );
