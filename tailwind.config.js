@@ -19,7 +19,7 @@ export default {
         },
         extend: {
             fontFamily: {
-                sans: ["Figtree", ...defaultTheme.fontFamily.sans],
+                sans: ["Host Grotesk", ...defaultTheme.fontFamily.sans],
             },
         },
     },
