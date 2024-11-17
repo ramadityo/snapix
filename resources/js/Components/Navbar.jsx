@@ -1,7 +1,7 @@
 import { Link } from "@inertiajs/react";
 import React from "react";
 
-export default function Navbar({ auth }) {
+export default function Navbar({ Auth }) {
     return (
         <nav className="w-10/12 desktop:w-9/12 mobile:w-full mx-auto  py-6 flex justify-between mobile:px-3">
             <img
@@ -11,7 +11,7 @@ export default function Navbar({ auth }) {
             />
 
             <div className="flex gap-x-4">
-                {auth.user ? (
+                {Auth.user ? (
                     <Link
                         href={route("dashboard")}
                         className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
@@ -34,6 +34,12 @@ export default function Navbar({ auth }) {
                         </Link>
                     </>
                 )}
+                <Link
+                    href={route("explore")}
+                    className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] "
+                >
+                    Explore
+                </Link>
             </div>
         </nav>
     );
