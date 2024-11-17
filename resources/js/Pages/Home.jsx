@@ -1,5 +1,6 @@
 import { Head, Link } from "@inertiajs/react";
 import Navbar from "@/Components/Navbar";
+import HeroSlider from "@/Components/HeroSlider";
 
 export default function Welcome({ auth }) {
     return (
@@ -23,6 +24,12 @@ export default function Welcome({ auth }) {
                         Real-Time.
                     </p>
                 </div>
+
+                <div className="w-10/12 desktop:w-9/12 mobile:w-full mx-auto  py-10  mobile:px-3">
+                    <HeroSlider />
+                </div>
+
+                <div></div>
             </div>
         </>
     );
