@@ -66,6 +66,8 @@ export default function HeroSlider() {
                 loop={true}
                 onMouseEnter={(swiper) => swiper.autoplay.stop()}
                 onMouseLeave={(swiper) => swiper.autoplay.start()}
+                // draggable={false}
+                allowTouchMove={false}
             >
                 {/*
                     Semua data di atas akan dimapping (loop) menjadi satu elemen SwiperSlide
