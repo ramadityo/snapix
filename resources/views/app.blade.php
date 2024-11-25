@@ -21,34 +21,6 @@
         @inertiaHead
     </head>
     <body class="font-sans antialiased">
-        <div class="container mx-auto mt-10">
-            <!-- Form Upload Gambar -->
-            <form action="{{ route('images.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div>
-                    <label for="image_upload" class="block text-lg">Pilih Gambar:</label>
-                    <input type="file" name="image_upload" id="image_upload" accept="image/*" required class="border p-2 rounded-md">
-                </div>
-                <button type="submit" class="mt-4 bg-blue-500 text-white py-2 px-4 rounded-md">Unggah Gambar</button>
-            </form>
-
-            <!-- Menampilkan pesan sukses setelah mengunggah gambar -->
-            @if (session('success'))
-                <div class="mt-4 text-green-600">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            <!-- Menampilkan Gambar Setelah Diupload -->
-            @if(!empty($image))
-                <div class="mt-10">
-                    <h2>Gambar yang Diupload:</h2>
-                    <img src="{{ asset('storage/' . $image->image_upload) }}" alt="Uploaded Image" class="w-full h-auto">
-                </div>
-            @endif
-        </div>
-    </body>
-    <!-- <body class="font-sans antialiased">
         @inertia
-    </body> -->
+    </body>
 </html>
