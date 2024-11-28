@@ -3,23 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Upload Image</title>
 </head>
 <body>
-    <h1>Haloo Saya Ini images</h1>
+    @if(session('success'))
+        <p style="color: green;">{{ session('success') }}</p>
+    @endif
 
-    <form action="{{ route('image_upload.store') }}" method="POST" enctype="multipart/form-data">
-    @csrf
-    <input type="hidden" name="id_user" value="4"> <!-- Ganti sesuai ID user aktif -->
+    <form action="/dashboard/images" method="POST" enctype="multipart/form-data">
+        @csrf
+        <label for="image_upload">Upload Image:</label>
+        <input type="file" name="image_upload" required><br>
 
-    <label for="image_upload">Upload Image:</label>
-    <input type="file" name="image_upload" id="image_upload" accept="image/*" required>
+        <label for="image_result">Result Image:</label>
+        <input type="file" name="image_result" required><br>
 
-    <button type="submit">Upload</button>
+        <button type="submit">Save Images</button>
     </form>
-
-
-
-
 </body>
 </html>
