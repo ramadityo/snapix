@@ -6,16 +6,17 @@ import { useState, useEffect } from "react";
 import { IoAdd } from "react-icons/io5";
 
 export default function Dashboard({ auth, users }) {
+    // function handleUpload
     const handleUpload = (imageFile) => {
         const reader = new FileReader();
+        // Jadi si reader ini bakal membaca file
+        // ke dalam bentuk BLOB, kita pakai ini
+        // untuk store ke local storage
         reader.readAsDataURL(imageFile);
         reader.onload = () => {
-            // router.visit("/editor", {
-            //     method: "get",
-            //     data: { image_file: reader.result },
-            //     preserveState: true,
-            // });
-
+            // Setelah diconvert jadi BLOB, akan dibungkus
+            // ke dalam local storage dan bakal ngarah ke editor
+            // Cek file Editor.jsx
             localStorage.setItem("image_file", reader.result);
             window.location.href = "/editor";
         };
@@ -46,18 +47,14 @@ export default function Dashboard({ auth, users }) {
                                 accept="image/png, image/jpeg"
                                 className="absolute inset-0 opacity-0"
                                 onChange={(e) =>
-                                    // setImageData(e.target.files[0])
+                                    // Setelah diupload, data image akan dikirim
+                                    // melalu function yg tertera, cek handleUpload di atas.
                                     handleUpload(e.target.files[0])
                                 }
                             />
                             <IoAdd className="text-5xl" />
                         </div>
                     </div>
-                    {/* backup untuk jaga2 kalau mau ubah layout :v */}
-
-                    {/* <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] auto-rows-[200px] gap-4">
-                        <div className="bg-black"></div>
-                    </div> */}
                 </div>
             </div>
         </AuthenticatedLayout>
