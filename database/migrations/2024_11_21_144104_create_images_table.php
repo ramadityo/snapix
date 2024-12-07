@@ -9,16 +9,16 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('images', function (Blueprint $table) {
-            $table->id('id_log');
-            $table->unsignedBigInteger('id_user');
-            $table->string('image_upload');
-            $table->string('image_result')->nullable();
-            $table->timestamps();
+        Schema::create('log_images', function (Blueprint $table) {
+            $table->id('id_log');          // Kolom ID log
+            $table->unsignedBigInteger('id_user'); // ID user yang mengunggah
+            $table->foreign('id_user')->references('id')->on('users'); // Connect to users table
+            $table->binary('image_upload');        // Gambar yang diunggah
+            $table->binary('image_result')->nullable(); // Hasil gambar (opsional)
+            $table->timestamp('created_date')->useCurrent(); // Waktu pembuatan
         });
-        
     }
 
     /**
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('images');
+        Schema::dropIfExists('log_images');
     }
 };
