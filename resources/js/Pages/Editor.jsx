@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Link, usePage, Head } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
+import { useEffect, useRef, useState } from "react";
 
 import Konva from "konva";
-import { Stage, Layer, Rect, Image } from "react-konva";
+import { Image, Layer, Stage } from "react-konva";
 import useImage from "use-image";
 
 import toast, { Toaster } from "react-hot-toast";
@@ -10,12 +10,12 @@ import toast, { Toaster } from "react-hot-toast";
 // ICONS
 import { IconContext } from "react-icons";
 
-import { TbCirclesFilled } from "react-icons/tb"; // RGB icon
-import { ImContrast } from "react-icons/im"; // Contrast icon
-import { ImBrightnessContrast } from "react-icons/im"; // Brightness icon
-import { IoCloseOutline } from "react-icons/io5"; // CLose icon
 import { FaSave } from "react-icons/fa"; // Save icon
+import { ImBrightnessContrast, ImContrast } from "react-icons/im"; // Contrast icon
+import { IoCloseOutline } from "react-icons/io5"; // CLose icon
 import { MdReplay } from "react-icons/md"; // Replay icon
+
+import axios from "axios";
 
 import "./loader/spinner.css";
 
@@ -131,27 +131,20 @@ export default function Editor({ auth }) {
         document.body.removeChild(link);
     }
 
-    const handleSave = async () => {
-        const imageUploadBase64 = localStorage.getItem("image_file");
-        const imageResultBase64 = imageRef.current.toDataURL().split(',')[1]; // Get base64 string for the edited image
+    const handleSave = () => {
+        // TO-DO: IMAGE URL HARUS MENGARAH KE DATABASE DALAM BENTUK BLOB
+
+        // var imageURL gunanya buat ngambil info URL dari si image itu
+        // yang dimana imagenya dijadikan dlm bentuk BLOB
+        // Gak percaya? coba uncomment satu sintaks di bawah!
         const imageURL = imageRef.current.toDataURL();
         downloadURL(imageURL, "edited_image.png");
-    
-        try {
-            const response = await axios.post('/editor', {
-                image_upload: imageUploadBase64,
-                image_result: imageResultBase64
-            });
-    
-            if (response.data.success) {
-                // downloadURL(imageResultBase64, "edited_image.png");
-                toast.success("Gambar berhasil disimpan!");
-            }
-        } catch (error) {
-            console.error('Error saving image:', error);
-            toast.error("Gagal menyimpan gambar.");
-        }
+
+        // console.log(imageURL);
+
+        toast.success("Gambar berhasil disimpan!");
     };
+
     useEffect(() => {
         const handleResize = () => {
             setStageSize({

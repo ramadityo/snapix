@@ -36,9 +36,15 @@ Route::get('/editor', [EditorController::class, 'index'])
     ->middleware('auth')
     ->name('editor');
 
-Route::get('/dashboard/images', function () {
-    return view('images'); 
-})->middleware('auth');
+Route::post('/editor', [ImageController::class, 'store'])->middleware('auth');
+
+
+
+
+
+// Route::get('/dashboard/images', function () {
+//     return view('images'); 
+// })->middleware('auth');
 
 Route::post('/dashboard/images', [ImageController::class, 'store'])->middleware('auth');
 
@@ -48,7 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::post('/editor', [EditorController::class, 'saveImage'])->middleware('auth');
+// Route::post('/editor', [EditorController::class, 'saveImage'])->middleware('auth');
 
 Route::get('/upload', function () {
     return view('upload');
