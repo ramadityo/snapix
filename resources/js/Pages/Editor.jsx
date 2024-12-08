@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Link, usePage, Head } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
+import { useEffect, useRef, useState } from "react";
 
 import Konva from "konva";
-import { Stage, Layer, Rect, Image } from "react-konva";
+import { Image, Layer, Stage } from "react-konva";
 import useImage from "use-image";
 
 import toast, { Toaster } from "react-hot-toast";
@@ -10,100 +10,16 @@ import toast, { Toaster } from "react-hot-toast";
 // ICONS
 import { IconContext } from "react-icons";
 
-import { TbCirclesFilled } from "react-icons/tb"; // RGB icon
-import { ImContrast } from "react-icons/im"; // Contrast icon
-import { ImBrightnessContrast } from "react-icons/im"; // Brightness icon
-import { IoCloseOutline } from "react-icons/io5"; // CLose icon
 import { FaSave } from "react-icons/fa"; // Save icon
+import { ImBrightnessContrast, ImContrast } from "react-icons/im"; // Contrast icon
+import { IoCloseOutline } from "react-icons/io5"; // CLose icon
 import { MdReplay } from "react-icons/md"; // Replay icon
 
 import "./loader/spinner.css";
 
-const ModalEdit = ({
-    stateName,
-    isOpen,
-    isCLose,
-    rgb,
-    setRGB,
-    contrast,
-    setContrast,
-    brightness,
-    setBrightness,
-}) => {
-    return (
-        <div
-            className={`absolute bottom-36 transition-all ${
-                isOpen ? "" : "translate-y-full opacity-0"
-            } left-1/2 -translate-x-1/2 w-[300px] min-h-10 p-4 rounded-xl bg-[#232326]`}
-        >
-            <div className="w-full flex justify-end">
-                <button
-                    className="p-2 transition-all bg-transparent hover:bg-[#2a2a2e] rounded-full"
-                    onClick={isCLose}
-                >
-                    <IconContext.Provider
-                        value={{ className: "text-base text-white" }}
-                    >
-                        <div className="transition-all group-hover:rotate-[360deg] ease-in-out duration-500">
-                            <IoCloseOutline />
-                        </div>
-                    </IconContext.Provider>
-                </button>
-            </div>
-
-            {stateName === "contrast" && (
-                <div className="flex flex-col gap-2 mt-2">
-                    <div className="flex justify-between items-center">
-                        <p className="text-xl font-sans font-bold text-white ">
-                            Contrast
-                        </p>
-                        <p className="text-base font-sans font-normal text-white ">
-                            {contrast}
-                        </p>
-                    </div>
-                    <input
-                        type="range"
-                        name="contrast"
-                        min="-100"
-                        max="100"
-                        id="contrast"
-                        onChange={(e) => {
-                            setContrast(Number(e.target.value));
-                        }}
-                        value={contrast}
-                    />
-                </div>
-            )}
-
-            {stateName === "brightness" && (
-                <div className="flex flex-col gap-2 mt-2">
-                    <div className="flex justify-between items-center">
-                        <p className="text-xl font-sans font-bold text-white ">
-                            Brightness
-                        </p>
-                        <p className="text-base font-sans font-normal text-white ">
-                            {brightness}
-                        </p>
-                    </div>
-                    <input
-                        type="range"
-                        name="brightness"
-                        min="-1"
-                        max="1"
-                        step="0.05"
-                        id="brightness"
-                        onChange={(e) => {
-                            setBrightness(Number(e.target.value));
-                        }}
-                        value={brightness}
-                    />
-                </div>
-            )}
-        </div>
-    );
-};
-
 export default function Editor({ auth }) {
+    // Variable image buat ngambil item dari image_file
+    // yang sudah diambil sebelumnya di Dashboard.jsx
     const [image] = useImage(`${localStorage.getItem("image_file")}`);
     const imageRef = useRef();
     const [stageSize, setStageSize] = useState({
@@ -111,9 +27,12 @@ export default function Editor({ auth }) {
         height: window.innerHeight,
     });
 
+    //Fungsi untuk close page editor
     const handleCLose = () => {
         var confirmModal = confirm("Editanmu akan hilang, yakin?");
 
+        // Kalau di alertnya milih OK,
+        // maka akan meremove item image_file dan mundur ke dashboard
         if (confirmModal == true) {
             localStorage.removeItem("image_file");
             window.location.href = "/dashboard";
@@ -132,12 +51,20 @@ export default function Editor({ auth }) {
     }
 
     const handleSave = () => {
-        // IMAGE URL HARUS MENGARAH KE DATABASE DALAM BENTUK BLOB
+        // TO-DO: IMAGE URL HARUS MENGARAH KE DATABASE DALAM BENTUK BLOB
+
+        // var imageURL gunanya buat ngambil info URL dari si image itu
+        // yang dimana imagenya dijadikan dlm bentuk BLOB
+        // Gak percaya? coba uncomment satu sintaks di bawah!
         const imageURL = imageRef.current.toDataURL();
         downloadURL(imageURL, "edited_image.png");
 
+        // console.log(imageURL);
+
         toast.success("Gambar berhasil disimpan!");
     };
+
+
 
     useEffect(() => {
         const handleResize = () => {
@@ -193,7 +120,6 @@ export default function Editor({ auth }) {
     };
 
     const resetButton = useRef();
-    const overlay = useRef();
 
     const [isReset, setIsReset] = useState(false);
 
@@ -353,3 +279,87 @@ export default function Editor({ auth }) {
         </>
     );
 }
+
+const ModalEdit = ({
+    stateName,
+    isOpen,
+    isCLose,
+    rgb,
+    setRGB,
+    contrast,
+    setContrast,
+    brightness,
+    setBrightness,
+}) => {
+    return (
+        <div
+            className={`absolute bottom-36 transition-all ${
+                isOpen ? "" : "translate-y-full opacity-0"
+            } left-1/2 -translate-x-1/2 w-[300px] min-h-10 p-4 rounded-xl bg-[#232326]`}
+        >
+            <div className="w-full flex justify-end">
+                <button
+                    className="p-2 transition-all bg-transparent hover:bg-[#2a2a2e] rounded-full"
+                    onClick={isCLose}
+                >
+                    <IconContext.Provider
+                        value={{ className: "text-base text-white" }}
+                    >
+                        <div className="transition-all group-hover:rotate-[360deg] ease-in-out duration-500">
+                            <IoCloseOutline />
+                        </div>
+                    </IconContext.Provider>
+                </button>
+            </div>
+
+            {stateName === "contrast" && (
+                <div className="flex flex-col gap-2 mt-2">
+                    <div className="flex justify-between items-center">
+                        <p className="text-xl font-sans font-bold text-white ">
+                            Contrast
+                        </p>
+                        <p className="text-base font-sans font-normal text-white ">
+                            {contrast}
+                        </p>
+                    </div>
+                    <input
+                        type="range"
+                        name="contrast"
+                        min="-100"
+                        max="100"
+                        id="contrast"
+                        onChange={(e) => {
+                            setContrast(Number(e.target.value));
+                        }}
+                        value={contrast}
+                    />
+                </div>
+            )}
+
+            {stateName === "brightness" && (
+                <div className="flex flex-col gap-2 mt-2">
+                    <div className="flex justify-between items-center">
+                        <p className="text-xl font-sans font-bold text-white ">
+                            Brightness
+                        </p>
+                        <p className="text-base font-sans font-normal text-white ">
+                            {brightness}
+                        </p>
+                    </div>
+                    <input
+                        type="range"
+                        name="brightness"
+                        min="-1"
+                        max="1"
+                        step="0.05"
+                        id="brightness"
+                        onChange={(e) => {
+                            setBrightness(Number(e.target.value));
+                        }}
+                        value={brightness}
+                    />
+                </div>
+            )}
+        </div>
+    );
+};

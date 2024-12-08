@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\EditorController;
+// use App\Http\Controllers\EditorController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -35,6 +35,18 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 Route::get('/editor', [ImageController::class, 'index'])
     ->middleware('auth')
     ->name('editor');
+
+Route::post('/editor', [ImageController::class, 'store'])->middleware('auth');
+
+
+
+
+
+// Route::get('/dashboard/images', function () {
+//     return view('images'); 
+// })->middleware('auth');
+
+// Route::post('/dashboard/images', [ImageController::class, 'store'])->middleware('auth');
 
 
 Route::middleware('auth')->group(function () {

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('images', function (Blueprint $table) {
             $table->id('id_log');
             $table->unsignedBigInteger('id_user');
-            $table->string('image_upload');
+            $table->string('image_upload')->nullable();
             $table->string('image_result')->nullable();
             $table->timestamps();
         });
