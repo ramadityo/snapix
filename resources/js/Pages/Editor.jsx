@@ -1,6 +1,7 @@
 import { Head } from "@inertiajs/react";
 import { useEffect, useRef, useState } from "react";
 
+import { Inertia } from '@inertiajs/inertia';
 import Konva from "konva";
 import { Image, Layer, Stage } from "react-konva";
 import useImage from "use-image";
@@ -50,21 +51,48 @@ export default function Editor({ auth }) {
         document.body.removeChild(link);
     }
 
-    const handleSave = () => {
-        // TO-DO: IMAGE URL HARUS MENGARAH KE DATABASE DALAM BENTUK BLOB
+    // const handleSave = () => {
+    //     // TO-DO: IMAGE URL HARUS MENGARAH KE DATABASE DALAM BENTUK BLOB
 
-        // var imageURL gunanya buat ngambil info URL dari si image itu
-        // yang dimana imagenya dijadikan dlm bentuk BLOB
-        // Gak percaya? coba uncomment satu sintaks di bawah!
+    //     // var imageURL gunanya buat ngambil info URL dari si image itu
+    //     // yang dimana imagenya dijadikan dlm bentuk BLOB
+    //     // Gak percaya? coba uncomment satu sintaks di bawah!
+    //     const imageURL = imageRef.current.toDataURL();
+    //     downloadURL(imageURL, "edited_image.png");
+
+    //     // console.log(imageURL);
+
+    //     toast.success("Gambar berhasil disimpan!");
+    // };
+
+
+    const handleSave = async () => {
         const imageURL = imageRef.current.toDataURL();
-        downloadURL(imageURL, "edited_image.png");
-
-        // console.log(imageURL);
-
-        toast.success("Gambar berhasil disimpan!");
+    
+        // Convert data URL menjadi Blob
+        const response = await fetch(imageURL);
+        const blob = await response.blob();
+    
+        // Siapkan form data
+        const formData = new FormData();
+        formData.append('image_upload', blob, 'edited_image.png');
+    
+        try {
+            // Kirim file menggunakan Inertia
+            Inertia.post('editor', formData, {
+                onSuccess: () => {
+                    toast.success('Gambar berhasil disimpan ke database!');
+                },
+                onError: (errors) => {
+                    console.error(errors);
+                    toast.error('Terjadi kesalahan saat menyimpan gambar');
+                },
+            });
+        } catch (error) {
+            console.error('Error:', error);
+            toast.error(`Gagal menyimpan gambar: ${error.message}`);
+        }
     };
-
-
 
     useEffect(() => {
         const handleResize = () => {
