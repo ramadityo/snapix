@@ -54,8 +54,8 @@ Route::get('/upload', function () {
     return view('upload');
 });
 
-Route::post('/upload', [FileController::class, 'store'])->name('upload');
-Route::get('/download/{id}', [FileController::class, 'show'])->name('download');
+// Route::post('/upload', [FileController::class, 'store'])->name('upload');
+// Route::get('/download/{id}', [FileController::class, 'show'])->name('download');
 
 require __DIR__.'/auth.php';
 
