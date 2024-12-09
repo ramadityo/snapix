@@ -32,9 +32,8 @@ const ModalEdit = ({
 }) => {
     return (
         <div
-            className={`absolute bottom-36 transition-all ${
-                isOpen ? "" : "translate-y-full opacity-0"
-            } left-1/2 -translate-x-1/2 w-[300px] min-h-10 p-4 rounded-xl bg-[#232326]`}
+            className={`absolute bottom-36 transition-all ${isOpen ? "" : "translate-y-full opacity-0"
+                } left-1/2 -translate-x-1/2 w-[300px] min-h-10 p-4 rounded-xl bg-[#232326]`}
         >
             <div className="w-full flex justify-end">
                 <button
@@ -136,13 +135,13 @@ export default function Editor({ auth }) {
         const imageResultBase64 = imageRef.current.toDataURL().split(',')[1]; // Get base64 string for the edited image
         const imageURL = imageRef.current.toDataURL();
         downloadURL(imageURL, "edited_image.png");
-    
+
         try {
             const response = await axios.post('/editor', {
                 image_upload: imageUploadBase64,
                 image_result: imageResultBase64
             });
-    
+
             if (response.data.success) {
                 // downloadURL(imageResultBase64, "edited_image.png");
                 toast.success("Gambar berhasil disimpan!");
@@ -230,9 +229,8 @@ export default function Editor({ auth }) {
             <Head title="Editor - Snapix" />
             <div className="relative w-full h-screen overflow-hidden flex">
                 <div
-                    className={`transition-all fixed inset-0 bg-black/80 z-30 flex items-center justify-center ${
-                        isReset ? "visible opacity-100" : "invisible opacity-0"
-                    }`}
+                    className={`transition-all fixed inset-0 bg-black/80 z-30 flex items-center justify-center ${isReset ? "visible opacity-100" : "invisible opacity-0"
+                        }`}
                 >
                     <div className="w-[60px] scale-50 flex justify-center">
                         <div className="loader"></div>
@@ -255,9 +253,9 @@ export default function Editor({ auth }) {
                                     isReset
                                         ? []
                                         : [
-                                              Konva.Filters.Contrast,
-                                              Konva.Filters.Brighten,
-                                          ]
+                                            Konva.Filters.Contrast,
+                                            Konva.Filters.Brighten,
+                                        ]
                                 }
                                 contrast={contrast}
                                 brightness={brightness}

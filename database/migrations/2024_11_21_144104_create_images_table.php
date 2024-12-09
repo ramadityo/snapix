@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('log_images', function (Blueprint $table) {
+        Schema::create('images', function (Blueprint $table) {
             $table->id('id_log');          // Kolom ID log
             $table->unsignedBigInteger('id_user'); // ID user yang mengunggah
             $table->foreign('id_user')->references('id')->on('users'); // Connect to users table
-            $table->binary('image_upload');        // Gambar yang diunggah
-            $table->binary('image_result')->nullable(); // Hasil gambar (opsional)
+            $table->longBlob('image_upload');        // Gambar yang diunggah
+            $table->longBlob('image_result')->nullable(); // Hasil gambar (opsional)
             $table->timestamp('created_date')->useCurrent(); // Waktu pembuatan
         });
     }
