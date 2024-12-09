@@ -1,7 +1,7 @@
 import { Head } from "@inertiajs/react";
 import { useEffect, useRef, useState } from "react";
 
-import { Inertia } from '@inertiajs/inertia';
+import { router } from "@inertiajs/react";
 import Konva from "konva";
 import { Image, Layer, Stage } from "react-konva";
 import useImage from "use-image";
@@ -105,6 +105,7 @@ const ModalEdit = ({
 };
 
 export default function Editor({ auth }) {
+    const imageLocal = localStorage.getItem("image_file");
     const [image] = useImage(`${localStorage.getItem("image_file")}`);
     const imageRef = useRef();
     const [stageSize, setStageSize] = useState({
@@ -132,45 +133,32 @@ export default function Editor({ auth }) {
         document.body.removeChild(link);
     }
 
-    // const handleSave = () => {
-    //     // TO-DO: IMAGE URL HARUS MENGARAH KE DATABASE DALAM BENTUK BLOB
-
-    //     // var imageURL gunanya buat ngambil info URL dari si image itu
-    //     // yang dimana imagenya dijadikan dlm bentuk BLOB
-    //     // Gak percaya? coba uncomment satu sintaks di bawah!
-    //     const imageURL = imageRef.current.toDataURL();
-    //     downloadURL(imageURL, "edited_image.png");
-
-    //     // console.log(imageURL);
-
-    //     toast.success("Gambar berhasil disimpan!");
-    // };
-
-
     const handleSave = async () => {
         const imageURL = imageRef.current.toDataURL();
-    
-        // Convert data URL menjadi Blob
-        const response = await fetch(imageURL);
-        const blob = await response.blob();
-    
-        // Siapkan form data
+        const imageORI = localStorage.getItem("image_file");
+
+        const imageUpload = await fetch(imageORI);
+        const imageResult = await fetch(imageURL);
+        const imageUploadBlob = await imageUpload.blob();
+        const imageResultBlob = await imageResult.blob();
+
         const formData = new FormData();
-        formData.append('image_upload', blob, 'edited_image.png');
-    
+        formData.append("user_id", auth.user.id);
+        formData.append("image_upload", imageUploadBlob, "original_image.png");
+        formData.append("image_result", imageResultBlob, "edited_image.png");
+
         try {
-            // Kirim file menggunakan Inertia
-            Inertia.post('editor', formData, {
+            router.post("editor", formData, {
                 onSuccess: () => {
-                    toast.success('Gambar berhasil disimpan ke database!');
+                    toast.success("Gambar berhasil disimpan!");
                 },
                 onError: (errors) => {
                     console.error(errors);
-                    toast.error('Terjadi kesalahan saat menyimpan gambar');
+                    toast.error("Terjadi kesalahan saat menyimpan gambar");
                 },
             });
         } catch (error) {
-            console.error('Error:', error);
+            console.error("Error:", error);
             toast.error(`Gagal menyimpan gambar: ${error.message}`);
         }
     };
@@ -205,6 +193,20 @@ export default function Editor({ auth }) {
             window.location.href = "/login";
         }
     }, [auth]);
+
+    useEffect(() => {
+        if (!imageLocal) {
+            window.location.href = "/dashboard";
+        } else {
+            return null;
+        }
+    }, [imageLocal]);
+
+    useEffect(() => {
+        window.addEventListener("unload", handleCLose);
+
+        return () => window.removeEventListener("unload", handleCLose);
+    }, []);
 
     const [contrast, setContrast] = useState(0);
     const [brightness, setBrightness] = useState(0);
