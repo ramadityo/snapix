@@ -2,24 +2,33 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
 import { useState, useEffect } from "react";
 
+import axios from "axios";
+
 // ICONS
 import { IoAdd } from "react-icons/io5";
 
 export default function Dashboard({ auth, users }) {
-    // function handleUpload
     const handleUpload = (imageFile) => {
         const reader = new FileReader();
-        // Jadi si reader ini bakal membaca file
-        // ke dalam bentuk BLOB, kita pakai ini
-        // untuk store ke local storage
-        reader.readAsDataURL(imageFile);
-        reader.onload = () => {
-            // Setelah diconvert jadi BLOB, akan dibungkus
-            // ke dalam local storage dan bakal ngarah ke editor
-            // Cek file Editor.jsx
-            localStorage.setItem("image_file", reader.result);
-            window.location.href = "/editor";
-        };
+
+        // reader.readAsDataURL(imageFile);
+        const formData = new FormData();
+        formData.append("image", imageFile);
+
+        axios
+            .post("/dashboard/upload-image", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
+            .then((response) => {
+                alert("Gambar berhasil diupload!");
+                router.visit("/editor");
+            })
+            .catch((error) => {
+                console.error("Upload gagal:", error);
+                alert("Terjadi kesalahan saat mengupload gambar.");
+            });
     };
 
     return (
@@ -47,8 +56,6 @@ export default function Dashboard({ auth, users }) {
                                 accept="image/png, image/jpeg"
                                 className="absolute inset-0 opacity-0"
                                 onChange={(e) =>
-                                    // Setelah diupload, data image akan dikirim
-                                    // melalu function yg tertera, cek handleUpload di atas.
                                     handleUpload(e.target.files[0])
                                 }
                             />
@@ -60,30 +67,3 @@ export default function Dashboard({ auth, users }) {
         </AuthenticatedLayout>
     );
 }
-
-// import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-// import { Head } from "@inertiajs/react";
-
-// export default function Dashboard() {
-//     return (
-//         <AuthenticatedLayout
-//             header={
-//                 <h2 className="text-xl font-semibold leading-tight text-gray-800">
-//                     Dashboard
-//                 </h2>
-//             }
-//         >
-//             <Head title="Dashboard" />
-
-//             <div className="py-12">
-//                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-//                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
-//                         <div className="p-6 text-gray-900 dark:text-gray-100">
-//                             You're logged in!
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
-//         </AuthenticatedLayout>
-//     );
-// }

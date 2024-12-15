@@ -10,7 +10,6 @@ import toast, { Toaster } from "react-hot-toast";
 
 // ICONS
 import { IconContext } from "react-icons";
-
 import { FaSave } from "react-icons/fa"; // Save icon
 import { ImBrightnessContrast, ImContrast } from "react-icons/im"; // Contrast icon
 import { IoCloseOutline } from "react-icons/io5"; // CLose icon
@@ -104,9 +103,9 @@ const ModalEdit = ({
     );
 };
 
-export default function Editor({ auth }) {
-    const imageLocal = localStorage.getItem("image_file");
-    const [image] = useImage(`${localStorage.getItem("image_file")}`);
+export default function Editor({ auth, imageUrl }) {
+    const imageLocal = imageUrl;
+    const [image] = useImage(`${imageUrl}`);
     const imageRef = useRef();
     const [stageSize, setStageSize] = useState({
         width: window.innerWidth,
@@ -134,29 +133,21 @@ export default function Editor({ auth }) {
     }
 
     const handleSave = async () => {
+        const imageUploadBase64 = localStorage.getItem("image_file");
+        const imageResultBase64 = imageRef.current.toDataURL().split(",")[1]; // Get base64 string for the edited image
         const imageURL = imageRef.current.toDataURL();
-        const imageORI = localStorage.getItem("image_file");
-
-        const imageUpload = await fetch(imageORI);
-        const imageResult = await fetch(imageURL);
-        const imageUploadBlob = await imageUpload.blob();
-        const imageResultBlob = await imageResult.blob();
-
-        const formData = new FormData();
-        formData.append("user_id", auth.user.id);
-        formData.append("image_upload", imageUploadBlob, "original_image.png");
-        formData.append("image_result", imageResultBlob, "edited_image.png");
+        downloadURL(imageURL, "edited_image.png");
 
         try {
-            router.post("editor", formData, {
-                onSuccess: () => {
-                    toast.success("Gambar berhasil disimpan!");
-                },
-                onError: (errors) => {
-                    console.error(errors);
-                    toast.error("Terjadi kesalahan saat menyimpan gambar");
-                },
+            const response = await axios.post("/editor", {
+                image_upload: imageUploadBase64,
+                image_result: imageResultBase64,
             });
+
+            if (response.data.success) {
+                // downloadURL(imageResultBase64, "edited_image.png");
+                toast.success("Gambar berhasil disimpan!");
+            }
         } catch (error) {
             console.error("Error:", error);
             toast.error(`Gagal menyimpan gambar: ${error.message}`);
@@ -195,11 +186,12 @@ export default function Editor({ auth }) {
     }, [auth]);
 
     useEffect(() => {
-        if (!imageLocal) {
-            window.location.href = "/dashboard";
-        } else {
-            return null;
-        }
+        // if (!imageLocal) {
+        //     window.location.href = "/dashboard";
+        // } else {
+        //     return null;
+        // }
+        console.log(imageLocal);
     }, [imageLocal]);
 
     useEffect(() => {
