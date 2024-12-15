@@ -55,4 +55,4 @@ Route::get('/upload', function () {
 // Route::get('/download/{id}', [FileController::class, 'show'])->name('download');
 
 require __DIR__.'/auth.php';
-
+Route::get('/editor/{image}', [ImageController::class, 'showEditor'])->name('editor.show');

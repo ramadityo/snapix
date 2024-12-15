@@ -39,7 +39,24 @@ class ImageController extends Controller
         // return response()->json(['message' => 'Gambar berhasil disimpan']);
     }
 
+    public function showEditor($id_log)
+    {
+        $image = Image::where('id_log', $id_log)->first();
+
+        if (!$image) {
+            abort(404, 'Image not found');
+        }
     
-
-
+        $imagePath = $image->image_upload; // Assuming this is the path to the image file
+    
+        // Construct the full URL to the image
+        $imageUrl = asset('storage/' . $imagePath);
+    
+        return Inertia::render('Editor', [
+            'imageUrl' => $imageUrl,
+            'auth' => [
+                'user' => Auth::user(),
+            ],
+        ]);
+    }
 }

@@ -30,7 +30,6 @@ class DashboardController extends Controller{
         $pathCombine = $filename . '.' . $extension;
         $path = $request->file('image')->storeAs('uploads', $pathCombine, 'public');
         // $path = $request->file('image')->store('uploads', 'public');
-        
 
         Image::create([
             'id_user' => Auth::id(),
