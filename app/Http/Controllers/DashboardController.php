@@ -29,6 +29,7 @@ class DashboardController extends Controller{
 
         $pathCombine = $filename . '.' . $extension;
         $path = $request->file('image')->storeAs('uploads', $pathCombine, 'public');
+        // $request->file('image')->move(public_path('uploads'), $pathCombine);
         // $path = $request->file('image')->store('uploads', 'public');
         
 

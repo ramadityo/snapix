@@ -27,7 +27,10 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 Route::post('/dashboard/upload-image', [DashboardController::class, 'sendImage'])->name('dashboard.uploadImage');
 
-Route::get('/editor', [EditorController::class, 'index'])->name('editor.index');
+// Route::get('/editor/{id_log}', [EditorController::class, 'index'])->name('editor.index');
+Route::get('/editor/{image}', [ImageController::class, 'showEditor'])->name('editor.show');
+
+// Route::get('/editor')->name('editor');
 
 // Route::get('/editor', [EditorController::class, 'index'])
 //     ->middleware('auth')
