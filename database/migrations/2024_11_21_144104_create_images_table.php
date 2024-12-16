@@ -16,16 +16,11 @@ return new class extends Migration
             $table->id('id_log');          // Kolom ID log
             $table->unsignedBigInteger('id_user'); // ID user yang mengunggah
             $table->foreign('id_user')->references('id')->on('users'); // Connect to users table
-            $table->binary('image_upload');        // Gambar yang diunggah
-            $table->binary('image_result')->nullable(); // Hasil gambar (opsional)
+            $table->string('image_upload');        // Gambar yang diunggah
+            $table->string('image_result')->nullable(); // Hasil gambar (opsional)
             $table->timestamp('created_date')->useCurrent(); // Waktu pembuatan
         });
-
-        // Alter the table to change image_upload and image_result to LONGBLOB
-        DB::statement('ALTER TABLE images MODIFY image_upload LONGBLOB');
-        DB::statement('ALTER TABLE images MODIFY image_result LONGBLOB');
     }
-
     /**
      * Reverse the migrations.
      */
