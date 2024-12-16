@@ -1,6 +1,7 @@
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, usePage } from "@inertiajs/react";
 import Navbar from "@/Components/Navbar";
 import HeroSlider from "@/Components/HeroSlider";
+import { useEffect } from "react";
 
 export default function Welcome({ auth }) {
     return (
