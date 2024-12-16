@@ -19,18 +19,13 @@ Route::get('/', function () {
     ]);
 });
 
-
-
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
 Route::post('/dashboard/upload-image', [DashboardController::class, 'sendImage'])->name('dashboard.uploadImage');
 
-// Route::get('/editor/{id_log}', [EditorController::class, 'index'])->name('editor.index');
-Route::get('/editor/{image}', [ImageController::class, 'showEditor'])->name('editor.show');
-
-// Route::get('/editor')->name('editor');
+Route::get('/editor', [EditorController::class, 'index'])->name('editor.index');
 
 // Route::get('/editor', [EditorController::class, 'index'])
 //     ->middleware('auth')
@@ -58,4 +53,4 @@ Route::get('/upload', function () {
 // Route::get('/download/{id}', [FileController::class, 'show'])->name('download');
 
 require __DIR__.'/auth.php';
-
+Route::get('/editor/{image}', [ImageController::class, 'showEditor'])->name('editor.show');
