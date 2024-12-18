@@ -1,7 +1,6 @@
 import { Head } from "@inertiajs/react";
 import { useEffect, useRef, useState } from "react";
 
-import { router } from "@inertiajs/react";
 import Konva from "konva";
 import { Image, Layer, Stage } from "react-konva";
 import useImage from "use-image";
