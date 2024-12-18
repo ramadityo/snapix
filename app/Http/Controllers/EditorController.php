@@ -13,7 +13,7 @@ class EditorController extends Controller
     public function index(Request $request)
     {
         $imagePath = $request->query('imagePath');
-        $imageUrl = Storage::url($imagePath);
+        $imageUrl = Storage::url('uploads/' . $imagePath);
     
         return Inertia::render('Editor', [
             'imageUrl' => $imageUrl,

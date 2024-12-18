@@ -1,7 +1,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, router } from "@inertiajs/react";
+// import { Inertia } from "@inertiajs/inertia";
 
-import axios from "axios";
 
 // ICONS
 import { IoAdd } from "react-icons/io5";
@@ -14,20 +14,7 @@ export default function Dashboard({ auth, users }) {
         const formData = new FormData();
         formData.append("image", imageFile);
 
-        axios
-            .post("/dashboard/upload-image", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            })
-            .then((response) => {
-                alert("Gambar berhasil diupload!");
-                router.visit("/editor");
-            })
-            .catch((error) => {
-                console.error("Upload gagal:", error);
-                alert("Terjadi kesalahan saat mengupload gambar.");
-            });
+        router.post("/dashboard/upload-image", formData);
     };
 
     return (
