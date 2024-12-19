@@ -37,11 +37,7 @@ class DashboardController extends Controller{
             'created_date' => now(),
         ]);
 
-        return Inertia::render('Editor', [
-            'imageUrl' => asset('storage/' . $pathCombine),
-            'auth' => [
-                'user' => Auth::user(),
-            ],
-        ]);
+        // return Inertia::render('Editor');
+        return redirect()->route('editor.index', ['imagePath' => $pathCombine]);
     }
 }
