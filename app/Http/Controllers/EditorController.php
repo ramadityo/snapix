@@ -87,4 +87,21 @@ class EditorController extends Controller
             ], 500);
         }
     }
+
+    
+    public function deleteImage(Request $request)
+    {
+        $userId = Auth::id();
+
+        // Temukan gambar dengan image_result null dan milik pengguna yang terautentikasi
+        $deletedRows = DB::table('images')
+            ->where('image_result', null)
+            ->where('id_user', $userId)
+            ->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => $deletedRows . ' baris berhasil dihapus.',
+        ]);
+    }
 }

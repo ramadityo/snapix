@@ -33,6 +33,8 @@ Route::get('/editor', [EditorController::class, 'index'])->name('editor.index');
 
 Route::post('/editor', [EditorController::class, 'saveImage'])->name('editor.save');
 
+Route::delete('/editor/delete', [EditorController::class, 'deleteImage'])->name('editor.delete');
+
 
 Route::get('/explore', [ExploreController::class, 'index'])
     ->middleware('auth')

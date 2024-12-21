@@ -32,16 +32,44 @@ export default function Editor({ auth, imageUrl }) {
         height: window.innerHeight,
     });
 
-    const handleCLose = () => {
-        var confirmModal = confirm("Editanmu akan hilang, yakin?");
+    // const handleCLose = () => {
+    //     var confirmModal = confirm("Editanmu akan hilang, yakin?");
 
-        if (confirmModal == true) {
-            localStorage.removeItem("image_file");
-            window.location.href = "/dashboard";
-        } else {
-            return null;
+    //     if (confirmModal == true) {
+    //         localStorage.removeItem("image_file");
+    //         window.location.href = "/dashboard";
+    //     } else {
+    //         return null;
+    //     }
+    // };
+    
+
+    const handleCLose = async () => {
+        const confirmDelete = confirm("Apakah Anda yakin ingin menghapus gambar ini?");
+    
+        if (confirmDelete) {
+            try {
+                const response = await axios.delete("/editor/delete", {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+    
+                if (response.data.success) {
+                    toast.success("Gambar berhasil dihapus!");
+                    // Mungkin Anda ingin melakukan navigasi atau pembaruan UI di sini
+                    window.location.href = "/dashboard"; // Contoh navigasi
+                } else {
+                    toast.error("Gagal menghapus gambar.");
+                }
+            } catch (error) {
+                console.error("Error saat menghapus gambar:", error);
+                toast.error(`Terjadi kesalahan: ${error.message}`);
+            }
         }
     };
+
+
 
     function downloadURL(url, name) {
         var link = document.createElement("a");
