@@ -23,5 +23,4 @@ class EditorController extends Controller
         ]);
     }
 
-    
 }
