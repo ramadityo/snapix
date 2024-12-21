@@ -14,14 +14,15 @@ return new class extends Migration
     public function up()
     {
         Schema::create('images', function (Blueprint $table) {
-            $table->id('id_log');          // Kolom ID log
-            $table->unsignedBigInteger('id_user'); // ID user yang mengunggah
-            $table->foreign('id_user')->references('id')->on('users'); // Connect to users table
-            $table->string('image_upload');        // Gambar yang diunggah
-            $table->string('image_result')->nullable(); // Hasil gambar (opsional)
-            $table->timestamp('created_date')->useCurrent(); // Waktu pembuatan
+            $table->id('id_log');  
+            $table->unsignedBigInteger('id_user'); 
+            $table->foreign('id_user')->references('id')->on('users');
+            $table->string('image_upload');    
+            $table->string('image_result')->nullable(); 
+            $table->timestamp('created_date')->useCurrent();
         });
     }
+
     /**
      * Reverse the migrations.
      */

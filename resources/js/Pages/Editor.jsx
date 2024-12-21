@@ -53,24 +53,42 @@ export default function Editor({ auth, imageUrl }) {
     }
 
     const handleSave = async () => {
-        const imageUploadBase64 = localStorage.getItem("image_file");
-        const imageResultBase64 = imageRef.current.toDataURL().split(",")[1]; // Get base64 string for the edited image
-        const imageURL = imageRef.current.toDataURL();
-        downloadURL(imageURL, "edited_image.png");
-
         try {
-            const response = await axios.post("/editor", {
-                image_upload: imageUploadBase64,
-                image_result: imageResultBase64,
+            // Let's check what's stored
+            console.log("All localStorage items:", localStorage);
+            
+            // Get the file path from URL parameters instead
+            const urlParams = new URLSearchParams(window.location.search);
+            const imagePath = urlParams.get('imagePath');
+            console.log("Image path from URL:", imagePath);
+    
+            const editedImageBase64 = imageRef.current.toDataURL('image/png');
+            const base64Data = editedImageBase64.replace(/^data:image\/\w+;base64,/, '');
+            
+            // Use the path from URL if localStorage is empty
+            const payload = {
+                image_upload: imagePath || 'uploads/' + localStorage.getItem("image_upload"),
+                image_result: base64Data
+            };
+            console.log("Sending payload:", payload);
+    
+            const response = await axios.post("/editor", payload, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                }
             });
-
+    
             if (response.data.success) {
-                // downloadURL(imageResultBase64, "edited_image.png");
-                toast.success("Gambar berhasil disimpan!");
+                downloadURL(editedImageBase64, "edited_image.png");
+                toast.success("Image saved successfully!");
             }
         } catch (error) {
-            console.error("Error:", error);
-            toast.error(`Gagal menyimpan gambar: ${error.message}`);
+            console.error("Full error:", error);
+            if (error.response?.data?.errors) {
+                console.log("Validation errors:", error.response.data.errors);
+            }
+            toast.error(`Failed to save image: ${error.message}`);
         }
     };
 

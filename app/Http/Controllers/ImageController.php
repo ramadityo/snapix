@@ -19,7 +19,6 @@ class ImageController extends Controller
         ]);
     }
     
-
     public function store(Request $request)
     {
         $request->validate([
@@ -31,7 +30,7 @@ class ImageController extends Controller
 
         Image::create([
             'id_user' => Auth::id(), 
-            'image_upload' => $imageUpload, 
+            'image_upload' => $validated['image_upload'], 
             'image_result' => $imageResult,
             'created_date' => now(),
         ]);
