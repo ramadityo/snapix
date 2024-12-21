@@ -22,7 +22,6 @@ return new class extends Migration
             $table->timestamp('created_date')->useCurrent();
         });
     }
-
     /**
      * Reverse the migrations.
      */
