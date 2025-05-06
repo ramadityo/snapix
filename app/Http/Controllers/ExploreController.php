@@ -11,7 +11,9 @@ class ExploreController extends Controller
 {
     public function index()
     {
-        $images = Image::all('id_user', 'image_result', 'created_date');
+        $images = Image::select('images.id_user', 'images.image_result', 'images.created_date', 'users.name')
+            ->join('users', 'images.id_user', '=', 'users.id')
+            ->get();
 
         return Inertia::render('Explore', [
             'images' => $images,
