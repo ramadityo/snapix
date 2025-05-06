@@ -38,7 +38,6 @@ export default function Editor({ auth, imageUrl }) {
         var confirmModal = confirm("Editanmu akan hilang, yakin?");
 
         if (confirmModal == true) {
-            localStorage.removeItem("image_file");
             window.location.href = "/dashboard";
         } else {
             return null;
@@ -53,21 +52,26 @@ export default function Editor({ auth, imageUrl }) {
         link.click();
         document.body.removeChild(link);
     }
-
+    
     const handleSave = async () => {
-        const imageUploadBase64 = localStorage.getItem("image_file");
-        const imageResultBase64 = imageRef.current.toDataURL().split(",")[1]; // Get base64 string for the edited image
-        const imageURL = imageRef.current.toDataURL();
-        downloadURL(imageURL, "edited_image.png");
+        const dataURL = imageRef.current.toDataURL("image/png");
+
+        const blob = await (await fetch(dataURL)).blob();
+
+        const filename = imageLocal.split("/").pop();
+
+        const formData = new FormData();
+        formData.append("image_upload", filename); // filename
+        formData.append("image_result", blob, "edited_image.png"); // blob PNG
 
         try {
-            const response = await axios.post("/editor", {
-                image_upload: imageUploadBase64,
-                image_result: imageResultBase64,
+            const response = await axios.post("/editor/save", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
             });
 
             if (response.data.success) {
-                // downloadURL(imageResultBase64, "edited_image.png");
                 toast.success("Gambar berhasil disimpan!");
             }
         } catch (error) {
@@ -77,6 +81,7 @@ export default function Editor({ auth, imageUrl }) {
     };
 
     useEffect(() => {
+        console.log(imageLocal);
         const handleResize = () => {
             setStageSize({
                 width: window.innerWidth,
