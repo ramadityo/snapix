@@ -29,6 +29,7 @@ class EditorController extends Controller
         $validated = $request->validate([
             'image_upload' => 'required|string',
             'image_result' => 'required|file|mimes:png,jpg,jpeg',
+            'location_name' => 'required|string',
         ]);
 
         $userId = Auth::id();
@@ -47,14 +48,21 @@ class EditorController extends Controller
                 ->where('id_user', $userId)
                 ->first();
 
-            if ($image) {
-                DB::table('images')
+                
+                if ($image) {
+                    DB::table('images')
                     ->where('id_log', $image->id_log)
                     ->update([
                         'image_result' => $editedPath,
                         'created_date' => now(),
                     ]);
-
+                    
+                    DB::table('images')
+                        ->where('id_log', $image->id_log)
+                        ->update([
+                            'location_name' => $validated['location_name']
+                        ]);
+                        
                 return response()->json([
                     'success' => true,
                     'message' => 'Image saved successfully',

@@ -75,6 +75,9 @@ export default function Explore({ auth, images }) {
                                         <p className="text-gray-300 font-regular text-lg">
                                             {dateFormat(image.created_date)}
                                         </p>
+                                        <p className="text-gray-300 font-regular text-sm">
+                                            {image.location_name}
+                                        </p>
                                     </div>
                                 </div>
                             </div>

@@ -28,6 +28,7 @@ import "./loader/spinner.css";
 export default function Editor({ auth, imageUrl }) {
     const imageLocal = imageUrl;
     const [image] = useImage(`${imageUrl}`);
+    const [location, setLocation] = useState("");
     const imageRef = useRef();
     const [stageSize, setStageSize] = useState({
         width: window.innerWidth,
@@ -52,7 +53,7 @@ export default function Editor({ auth, imageUrl }) {
         link.click();
         document.body.removeChild(link);
     }
-    
+
     const handleSave = async () => {
         const dataURL = imageRef.current.toDataURL("image/png");
 
@@ -63,6 +64,7 @@ export default function Editor({ auth, imageUrl }) {
         const formData = new FormData();
         formData.append("image_upload", filename); // filename
         formData.append("image_result", blob, "edited_image.png"); // blob PNG
+        formData.append("location_name", location);
 
         try {
             const response = await axios.post("/editor/save", formData, {
@@ -192,8 +194,58 @@ export default function Editor({ auth, imageUrl }) {
 
     const container = useRef();
     const overlayInit = useRef();
+    const modalRef = useRef();
 
     const { contextSafe } = useGSAP({ scope: container });
+    useEffect(() => {
+        gsap.set(modalRef.current, { autoAlpha: 0 });
+        gsap.set(".expandModal", { scale: 0 });
+    }, []);
+
+    const animateModal = contextSafe(() => {
+        let tl = gsap.timeline();
+
+        tl.to(
+            modalRef.current,
+            {
+                duration: 1,
+                autoAlpha: 1,
+                ease: "power4.inOut",
+                // willChange: "transform",
+            },
+            1
+        );
+        tl.to(".expandModal", {
+            duration: 1,
+            ease: "expo.inOut",
+            scale: 1,
+            // yPercent: 100,
+            stagger: 0.1,
+        })
+    });
+
+    const animateCloseModal = contextSafe(() => {
+        let tl = gsap.timeline();
+
+        tl.to(".expandModal", {
+            duration: 1,
+            ease: "expo.inOut",
+            scale: 0,
+            // yPercent: 100,
+            stagger: 0.1,
+        }, 1)
+
+        tl.to(
+            modalRef.current,
+            {
+                duration: 1,
+                autoAlpha: 0,
+                ease: "power4.inOut",
+                // willChange: "transform",
+            },
+            1.5
+        );
+    });
 
     const animateEditBox = contextSafe(() => {
         let tl = gsap.timeline();
@@ -370,7 +422,7 @@ export default function Editor({ auth, imageUrl }) {
                         <div className="button-anim">
                             <button
                                 className=" p-3 rounded-full transition-all hover:bg-[#232326] group"
-                                onClick={handleSave}
+                                onClick={animateModal}
                             >
                                 <IconContext.Provider
                                     value={{ className: "text-2xl text-white" }}
@@ -444,6 +496,66 @@ export default function Editor({ auth, imageUrl }) {
                         },
                     }}
                 />
+            </div>
+
+            <div
+                ref={modalRef}
+                className={`absolute inset-0 bg-black/30 flex items-center justify-center`}
+            >
+                <div className="w-[500px] bg-white p-6 rounded-xl expandModal">
+                    <div className="fadeContent">
+                        <button className="w-full flex justify-end cursor-pointer" onClick={animateCloseModal}>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                class="lucide lucide-x-icon lucide-x"
+                            >
+                                <path d="M18 6 6 18" />
+                                <path d="m6 6 12 12" />
+                            </svg>
+                        </button>
+
+                        <div className="mt-6 rounded-md w-full h-[200px] overflow-hidden">
+                            <img
+                                src={imageLocal}
+                                className="w-full h-full object-cover object-center"
+                                alt=""
+                            />
+                        </div>
+
+                        <div className="w-full mt-4 space-y-4">
+                            <div className="space-y-2">
+                                <p className="text-2xl font-bold text-[#0D0D11]">
+                                    Location
+                                </p>
+                                <input
+                                    type="text"
+                                    className="w-full py-2 px-3 rounded-md"
+                                    placeholder="Where you take this photo?"
+                                    value={location}
+                                    onChange={(e) =>
+                                        setLocation(e.target.value)
+                                    }
+                                />
+                            </div>
+                            <div className="flex items-center justify-end">
+                                <button
+                                    className="py-2 px-4 rounded-md bg-[#3a31d8] text-white"
+                                    onClick={handleSave}
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

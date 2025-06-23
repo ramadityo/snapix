@@ -11,7 +11,7 @@ class ExploreController extends Controller
 {
     public function index()
     {
-        $images = Image::select('images.id_user', 'images.image_result', 'images.created_date', 'users.name')
+        $images = Image::select('images.id_user', 'images.image_result', 'images.created_date', 'images.location_name', 'users.name')
             ->join('users', 'images.id_user', '=', 'users.id')
             ->get();
 
